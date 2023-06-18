@@ -1,0 +1,36 @@
+{
+  "name": "main-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist index.js",
+    "build": "babel src -d dist --delete-dir-on-start --minified",
+    "babel-watch": "babel src --watch --out-dir dist --delete-dir-on-start --minified",
+    "dev": "nodemon -e * dist/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "chalk": "4.1.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.1",
+    "helmet": "^6.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "lib": "*",
+    "mongoose": "^7.2.2",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "concurrently": "^8.0.1",
+    "nodemon": "^2.0.19"
+  }
+}

@@ -1,2 +1,2 @@
 # open-chat
-Open chat applications 
+Open Chat mono repo

@@ -1,0 +1,30 @@
+{
+  "name": "open-chat",
+  "version": "1.0.0",
+  "description": "Open Chat monorepo",
+  "repository": "https://github.com/MRcraigchick/open-chat.git",
+  "author": "Craig Chick",
+  "private": true,
+  "scripts": {
+    "app": "yarn --cwd app",
+    "api": "yarn workspace main-api",
+    "auth": "yarn workspace auth-api"
+  },
+  "workspaces": {
+    "packages": [
+      "apis/**",
+      "shared/**"
+    ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.22.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.21.5",
+    "@babel/preset-env": "^7.22.4",
+    "@babel/preset-react": "^7.22.3",
+    "@babel/runtime": "^7.22.3",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "babel-plugin-transform-commonjs": "^1.1.6",
+    "concurrently": "^8.0.1"
+  }
+}
