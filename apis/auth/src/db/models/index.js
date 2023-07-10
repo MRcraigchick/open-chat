@@ -1,1 +1,1 @@
-export { default as Token } from './src/token';
+export { default as Session } from './src/session';

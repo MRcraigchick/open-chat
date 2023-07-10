@@ -3,26 +3,26 @@ import { validate, query } from '@/middleware';
 import controller from '@/controllers/token';
 
 export default routerInstance((router) => {
-  router.post('/', validate.fields(['id']), controller.generateSessionTokens);
+  router.post('/', validate.fields(['id']), controller.generateTokens);
 
   router.post(
     '/access/refresh',
-    validate.fields(['refresh']),
+    validate.fields(['session']),
     query.token.exists,
-    controller.renewAccessTokenWithRefreshToken
+    controller.renewAccessTokenWithSessionToken
   );
 
   router.post(
-    '/access/valid',
+    '/access/validate',
     validate.fields(['access']),
     query.token.exists,
     controller.validateAccessToken
   );
 
   router.delete(
-    '/refresh',
-    validate.fields(['refresh']),
+    '/session',
+    validate.fields(['session']),
     query.token.exists,
-    controller.removeRefreshToken
+    controller.removeSessionToken
   );
 });

@@ -8,7 +8,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import logger from 'morgan';
 import chalk from 'chalk';
-import { tokenRouter } from '@/routes';
+import { tokensRouter } from '@/routes';
 import connectToDatabase from '@/db/mongo_db_connector';
 
 const PORT = process.env.PORT || '8000';
@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(cors());
 
 // EXPRESS ROUTERS
-app.use('/token', tokenRouter);
+app.use('/tokens', tokensRouter);
 
 // PORT LISTENER
 app.listen(PORT, () => {

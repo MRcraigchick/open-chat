@@ -1,18 +1,18 @@
-import { Token } from '@/db/models';
+import { Session } from '@/db/models';
 import jwt from '@/lib/jwt-util';
 
 export default (() => {
   return {
-    async generateSessionTokens(req, res, next) {
+    async generateTokens(req, res, next) {
       try {
-        const accessToken = jwt.createAccessToken(req.body.id);
-        const refreshToken = jwt.createRefreshToken(req.body.id);
-        await new Token({ hash: refreshToken }).save();
+        const accessToken = jwt.createAccessToken({ id: req.body.id });
+        const sessionToken = jwt.createSessionToken({ id: req.body.id });
+        await new Session({ token: sessionToken }).save();
         res.status(200).json({
           result: true,
           tokens: {
             access: accessToken,
-            refresh: refreshToken,
+            session: sessionToken,
           },
         });
         return;
@@ -43,12 +43,12 @@ export default (() => {
       }
     },
 
-    async renewAccessTokenWithRefreshToken(req, res, next) {
+    async renewAccessTokenWithSessionToken(req, res, next) {
       try {
-        jwt.verifyRefreshToken(req.body.refresh);
+        jwt.verifySessionToken(req.body.session);
       } catch (err) {
         console.log(err);
-        Token.deleteMany({ hash: req.body.refresh });
+        Session.deleteMany({ token: req.body.session });
         res
           .status(401)
           .json({ result: false, expired: true, error: 'Session has expired' });
@@ -56,7 +56,10 @@ export default (() => {
       }
       try {
         res.status(200),
-          json({ result: true, tokens: { access: jwt.createAccessToken(req.body.id) } });
+          json({
+            result: true,
+            tokens: { access: jwt.createAccessToken({ id: req.body.id }) },
+          });
         return;
       } catch (err) {
         console.log(err);
@@ -65,15 +68,15 @@ export default (() => {
       }
     },
 
-    async removeRefreshToken(req, res, next) {
+    async removeSessionToken(req, res, next) {
       try {
-        await Token.deleteMany({ hash: req.body.refresh });
+        await Session.deleteMany({ token: req.body.session });
         res
           .status(200)
-          .json({ result: true, message: 'Refresh token removed succesfully' });
+          .json({ result: true, message: 'Session token removed successfully' });
       } catch (err) {
         console.log(err);
-        res.status(500).json({ result: false, error: 'Failed to remove refresh token' });
+        res.status(500).json({ result: false, error: 'Failed to remove session token' });
         return;
       }
     },

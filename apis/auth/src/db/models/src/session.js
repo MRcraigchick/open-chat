@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 export default mongoose.model(
-  'token',
+  'session',
   mongoose.Schema({
-    hash: String,
+    token: String,
   })
 );
