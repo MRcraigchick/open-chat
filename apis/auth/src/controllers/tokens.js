@@ -29,17 +29,11 @@ export default (() => {
     async validateAccessToken(req, res, next) {
       try {
         jwt.verifyAccessToken(req.body.access);
+        res.status(200).json({ result: true, message: 'Access token validated' });
+        return;
       } catch (err) {
         console.log(err);
         res.status(401).json({ result: false, error: 'Invalid access token' });
-        return;
-      }
-      try {
-        res.status(200), json({ result: true, message: 'Access token validated' });
-        return;
-      } catch (err) {
-        console.log(err);
-        res.status(500).json({ result: false, error: 'Failed to validate access token' });
         return;
       }
     },
@@ -47,16 +41,15 @@ export default (() => {
     async refreshAccessTokenWithSessionToken(req, res, next) {
       const { session, payload } = req.body;
       try {
-        jwt.verifySessionToken(session);
-      } catch (err) {
-        console.log(err);
-        Session.deleteMany({ token: session });
-        res
-          .status(401)
-          .json({ result: false, expired: true, error: 'Session has expired' });
-        return;
-      }
-      try {
+        if (!Session.findOne({ token: session })) {
+          res.status(404).json({ result: false, error: 'Session does no exist' });
+          return;
+        }
+        if (!jwt.verifySessionToken(session)) {
+          res.status(401).json({ result: false, error: 'Session token invalid' });
+          Session.deleteOne({ token: session });
+          return;
+        }
         res.status(200).json({
           result: true,
           tokens: { access: jwt.createAccessToken({ payload }) },
