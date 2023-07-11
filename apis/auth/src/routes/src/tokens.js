@@ -1,28 +1,27 @@
 import { routerInstance } from '@/lib/express-util';
 import { validate, query } from '@/middleware';
-import controller from '@/controllers/token';
+import controller from '@/controllers/tokens';
 
 export default routerInstance((router) => {
-  router.post('/', validate.fields(['id']), controller.generateTokens);
+  router.post('/', validate.fields(['payload']), controller.generateTokens);
 
   router.post(
     '/access/refresh',
-    validate.fields(['session']),
-    query.token.exists,
-    controller.renewAccessTokenWithSessionToken
+    validate.fields(['session', 'payload']),
+    query.session.exists,
+    controller.refreshAccessTokenWithSessionToken
   );
 
   router.post(
     '/access/validate',
     validate.fields(['access']),
-    query.token.exists,
     controller.validateAccessToken
   );
 
   router.delete(
     '/session',
     validate.fields(['session']),
-    query.token.exists,
+    query.session.exists,
     controller.removeSessionToken
   );
 });

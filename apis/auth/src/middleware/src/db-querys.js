@@ -2,9 +2,9 @@ import { Session } from '@/db/models';
 
 export default (() => {
   return {
-    token: {
+    session: {
       async exists(req, res, next) {
-        const token = await Session.findOne({ token: req.body.token });
+        const token = await Session.findOne({ token: req.body.session });
         if (token) {
           next();
           return;

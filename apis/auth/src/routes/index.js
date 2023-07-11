@@ -1,1 +1,1 @@
-export { default as tokenRouter } from './src/tokens';
+export { default as tokensRouter } from './src/tokens';

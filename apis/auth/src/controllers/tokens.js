@@ -5,14 +5,15 @@ export default (() => {
   return {
     async generateTokens(req, res, next) {
       try {
-        const accessToken = jwt.createAccessToken({ id: req.body.id });
-        const sessionToken = jwt.createSessionToken({ id: req.body.id });
-        await new Session({ token: sessionToken }).save();
+        const { payload } = req.body;
+        const access = jwt.createAccessToken({ payload });
+        const session = jwt.createSessionToken({ payload });
+        await new Session({ token: session }).save();
         res.status(200).json({
           result: true,
           tokens: {
-            access: accessToken,
-            session: sessionToken,
+            access,
+            session,
           },
         });
         return;
@@ -43,23 +44,23 @@ export default (() => {
       }
     },
 
-    async renewAccessTokenWithSessionToken(req, res, next) {
+    async refreshAccessTokenWithSessionToken(req, res, next) {
+      const { session, payload } = req.body;
       try {
-        jwt.verifySessionToken(req.body.session);
+        jwt.verifySessionToken(session);
       } catch (err) {
         console.log(err);
-        Session.deleteMany({ token: req.body.session });
+        Session.deleteMany({ token: session });
         res
           .status(401)
           .json({ result: false, expired: true, error: 'Session has expired' });
         return;
       }
       try {
-        res.status(200),
-          json({
-            result: true,
-            tokens: { access: jwt.createAccessToken({ id: req.body.id }) },
-          });
+        res.status(200).json({
+          result: true,
+          tokens: { access: jwt.createAccessToken({ payload }) },
+        });
         return;
       } catch (err) {
         console.log(err);
