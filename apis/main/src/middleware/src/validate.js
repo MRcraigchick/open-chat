@@ -29,21 +29,21 @@ export default (() => {
       }
       next();
     },
-    async session(req, res, next) {
+    async access(req, res, next) {
       try {
-        const authRes = await auth.post('/token/access/valid', {
+        const authRes = await auth.post('/tokens/access/validate', {
           access: req.body.access,
         });
         const authData = await authRes.json();
         if (!authData.result) {
-          res.status(401).json('Invalid session');
+          res.status(401).json('Access denied');
           return;
         }
         next();
         return;
       } catch (err) {
         console.log(err);
-        res.status(500).json({ result: false, error: 'Failed validate session' });
+        res.status(500).json({ result: false, error: 'Access denied' });
       }
     },
   };

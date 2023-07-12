@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
-export const requestsInstance = Requests(process.env.AUTH_DOMAIN);
+export const requestsInstance = Requests(process.env.AUTH_ORIGIN);
 
 function Requests(authServerDomain) {
   return {

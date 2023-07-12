@@ -22,42 +22,42 @@ export default (() => {
     async startSession(req, res, next) {
       try {
         const user = await User.findOne({ email: req.body.email });
-        const authRes = await auth.post('/token', { id: user._id });
+        const authRes = await auth.post('/tokens', { payload: { id: user._id } });
         const authData = await authRes.json();
-        if (!authData.result) throw new Error('Auth server failed to generate tokens');
+        if (!authData.result) throw new Error('Failed to generate tokens');
         res.status(200).json({ result: true, tokens: authData.tokens });
       } catch (err) {
         console.log(err);
-        res.status(500).json({ result: false, error: 'Failed to create session' });
+        res.status(500).json({ result: false, error: 'Failed to generate tokens' });
       }
     },
 
-    async updateSession(req, res, next) {
+    async updateAccess(req, res, next) {
       try {
-        const authRes = await auth.post('/token/access/refresh', {
-          refresh: req.body.refresh,
+        const authRes = await auth.post('/tokens/access/refresh', {
+          session: req.body.session,
         });
         const authData = await authRes.json();
-        if (!authData.result)
-          throw new Error('Auth server failed to update access token');
-        res.status(200).json({ result: true, access: authData.access });
+        console.log(authData);
+        if (!authData.result) throw new Error('Invalid session token');
+        res.status(200).json({ result: true, access: authData.tokens.access });
       } catch (err) {
         console.log(err);
-        res.status(500).json({ result: false, error: 'Failed to update session' });
+        res.status(500).json({ result: false, error: 'Invalid session token' });
       }
     },
 
     async endSession(req, res, next) {
       try {
-        const authRes = await auth.delete('/token/refresh', {
-          refresh: req.body.refresh,
+        const authRes = await auth.delete('/tokens/session', {
+          session: req.body.session,
         });
         const authData = await authRes.json();
-        if (!authData.result) throw new Error('Auth server failed to remove token');
+        if (!authData.result) throw new Error('Invalid session');
         res.status(200).json({ result: true, message: 'Session ended' });
       } catch (err) {
         console.log(err);
-        res.status(500).json({ result: false, error: 'Failed to end session' });
+        res.status(500).json({ result: false, error: 'Invalid session' });
       }
     },
   };

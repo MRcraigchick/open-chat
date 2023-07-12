@@ -11,17 +11,13 @@ export default routerInstance((router) => {
     controller.register
   );
   router.post(
-    '/session',
+    '/session/start',
     validate.fields(['email', 'password']),
     validate.email,
     query.user.exists,
     query.user.matchingPassword,
     controller.startSession
   );
-  router.put(
-    '/session/access/refresh',
-    validate.fields(['refresh']),
-    controller.updateSession
-  );
-  router.delete('/session/refresh', validate.fields(['refresh']), controller.endSession);
+  router.put('/access/refresh', validate.fields(['session']), controller.updateAccess);
+  router.delete('/session/end', validate.fields(['session']), controller.endSession);
 });
