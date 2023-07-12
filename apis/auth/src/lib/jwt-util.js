@@ -4,13 +4,13 @@ export default (() => {
   return {
     verifySessionToken(token) {
       const result = jwt.verify(token, process.env.SESSION_TOKEN_SECRET);
-      if (result) return;
+      if (result) return result;
       throw new Error('Invalid session token');
     },
 
     verifyAccessToken(token) {
       const result = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      if (result) return;
+      if (result) return result;
       throw new Error('Invalid access token');
     },
 

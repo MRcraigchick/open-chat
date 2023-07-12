@@ -19,9 +19,7 @@ export default (() => {
         return;
       } catch (err) {
         console.log(err);
-        res
-          .status(500)
-          .json({ result: false, error: 'Failed to generate session tokens' });
+        res.status(500).json({ result: false, error: 'Failed to generate tokens' });
         return;
       }
     },
@@ -39,20 +37,16 @@ export default (() => {
     },
 
     async refreshAccessTokenWithSessionToken(req, res, next) {
-      const { session, payload } = req.body;
+      const { session } = req.body;
       try {
         if (!Session.findOne({ token: session })) {
           res.status(404).json({ result: false, error: 'Session does no exist' });
           return;
         }
-        if (!jwt.verifySessionToken(session)) {
-          res.status(401).json({ result: false, error: 'Session token invalid' });
-          Session.deleteOne({ token: session });
-          return;
-        }
+        const sessionData = jwt.verifySessionToken(session);
         res.status(200).json({
           result: true,
-          tokens: { access: jwt.createAccessToken({ payload }) },
+          tokens: { access: jwt.createAccessToken({ payload: sessionData.payload }) },
         });
         return;
       } catch (err) {
@@ -72,6 +66,15 @@ export default (() => {
         console.log(err);
         res.status(500).json({ result: false, error: 'Failed to remove session token' });
         return;
+      }
+    },
+    async sendTokenPayload(req, res, next) {
+      try {
+        const tokenData = jwt.verifyAccessToken(req.body.access);
+        res.status(200).json({ result: true, payload: tokenData.payload });
+      } catch (err) {
+        console.log(err);
+        res.status(401).json({ result: false, error: 'Invalid access token' });
       }
     },
   };

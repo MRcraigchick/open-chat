@@ -7,7 +7,7 @@ export default routerInstance((router) => {
 
   router.post(
     '/access/refresh',
-    validate.fields(['session', 'payload']),
+    validate.fields(['session']),
     query.session.exists,
     controller.refreshAccessTokenWithSessionToken
   );
@@ -16,6 +16,13 @@ export default routerInstance((router) => {
     '/access/validate',
     validate.fields(['access']),
     controller.validateAccessToken
+  );
+
+  router.post(
+    '/payload',
+    validate.fields(['access']),
+    validate.accessToken,
+    controller.sendTokenPayload
   );
 
   router.delete(

@@ -9,9 +9,9 @@ export default (() => {
           next();
           return;
         }
-        res.status(401).json({
+        res.status(404).json({
           result: false,
-          error: 'Invalid token',
+          error: 'Token not found',
         });
       },
     },

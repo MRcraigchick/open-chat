@@ -1,4 +1,5 @@
 import { validateBody } from 'lib/cjs/input-validators';
+import jwt from '@/lib/jwt-util';
 
 export default (() => {
   return {
@@ -18,6 +19,17 @@ export default (() => {
         }
         next();
       };
+    },
+    accessToken(req, res, next) {
+      try {
+        jwt.verifyAccessToken(req.body.access);
+        next();
+        return;
+      } catch (err) {
+        console.log(err);
+        res.status(401).json({ result: false, error: 'Invalid access token' });
+        return;
+      }
     },
   };
 })();
