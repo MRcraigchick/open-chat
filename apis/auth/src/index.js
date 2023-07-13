@@ -10,6 +10,7 @@ import logger from 'morgan';
 import chalk from 'chalk';
 import { tokensRouter } from '@/routes';
 import connectToDatabase from '@/db/mongo_db_connector';
+import './task-runners';
 
 const PORT = process.env.PORT || '8000';
 const app = express();

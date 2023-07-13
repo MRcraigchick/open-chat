@@ -39,10 +39,12 @@ export default (() => {
     async refreshAccessTokenWithSessionToken(req, res, next) {
       const { session } = req.body;
       try {
-        if (!Session.findOne({ token: session })) {
+        const foundSession = await Session.findOne({ token: session });
+        if (!foundSession) {
           res.status(404).json({ result: false, error: 'Session does no exist' });
           return;
         }
+        await Session.updateOne({ token: session }, { lastRequested: new Date() });
         const sessionData = jwt.verifySessionToken(session);
         res.status(200).json({
           result: true,
@@ -58,7 +60,7 @@ export default (() => {
 
     async removeSessionToken(req, res, next) {
       try {
-        await Session.deleteMany({ token: req.body.session });
+        await Session.deleteOne({ token: req.body.session });
         res
           .status(200)
           .json({ result: true, message: 'Session token removed successfully' });
