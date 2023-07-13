@@ -1,4 +1,4 @@
-import { validateBody } from 'lib/cjs/input-validators';
+import { validateBody } from '@/lib/input-validators';
 import jwt from '@/lib/jwt-util';
 
 export default (() => {

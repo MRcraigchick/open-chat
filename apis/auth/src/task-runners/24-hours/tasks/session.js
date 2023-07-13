@@ -4,8 +4,8 @@ const { add } = require('date-fns');
 export default (() => {
   return {
     async removeUnused(expires) {
-      const thresholdDate = add(new Date(), expires || { days: -7 });
       try {
+        const thresholdDate = add(new Date(), expires || { days: -7 });
         const unusedSessions = await Session.find({
           lastRequested: { $lt: thresholdDate },
         });

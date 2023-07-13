@@ -1,3 +1,28 @@
+/**
+ * Converts a time string to milliseconds.
+ *
+ * @param {string} timeString - The time string to convert. Format: "<value><unit>".
+ * - ms = milliseconds
+ * - s = seconds
+ * - m = minutes
+ * - h = hours
+ * - D = days
+ * - M = months
+ * - Y = years
+ *
+ * @returns {number} The equivalent time value in milliseconds.
+ *
+ * @example
+ * // Returns 5000 (5 seconds in milliseconds)
+ * convertTimeStringToMilliseconds("5s");
+ *
+ * @example
+ * // Returns 60000 (1 minute in milliseconds)
+ * convertTimeStringToMilliseconds("1m");
+ *
+ * @throws {Error} If the time string format is invalid or the time unit is invalid.
+ */
+
 export function convertTimeStringToMilliseconds(timeString) {
   const regex = /^(\d+)(ms|s|m|h|D|M|Y)$/;
 

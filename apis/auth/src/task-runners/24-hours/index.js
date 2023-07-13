@@ -1,6 +1,6 @@
-import runTimeLoop from '@/lib/loops';
+import runtimeLoop from '@/lib/loops';
 import session from './tasks/session';
 
-runTimeLoop(async () => {
+runtimeLoop(async () => {
   session.removeUnused({ days: -1 });
 }, '24h');
